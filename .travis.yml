@@ -1,0 +1,10 @@
+sudo: required
+services: docker
+language: bash
+branches:
+  only:
+    - master
+before_script:
+  - docker build -t ianblenke/rpi-elasticsearch:v5.6.3 .
+after_success:
+  - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push ianblenke/rpi-elasticsearch:v5.6.3; fi
