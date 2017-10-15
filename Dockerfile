@@ -40,11 +40,16 @@ ENV GPG_KEY=46095ACC8548582C1A2699A9D27D666CD88E42B4
 
 WORKDIR /usr/share/elasticsearch
 
-ENV PATH=/usr/share/elasticsearch/bin:$PATH \
-    ELASTICSEARCH_VERSION=5.6.3 \
-    ELASTICSEARCH_TARBALL="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.3.tar.gz" \
-    ELASTICSEARCH_TARBALL_ASC="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.3.tar.gz.asc" \
-    ELASTICSEARCH_TARBALL_SHA1="d5e4b61038f2cc3ec7ae5cbecf3406c7ecc7a1c4"
+ENV PATH /usr/share/elasticsearch/bin:$PATH
+
+ARG ELASTICSEARCH_VERSION
+ENV ELASTICSEARCH_VERSION ${ELASTICSEARCH_VERSION:-5.6.3}
+
+ARG ELASTICSEARCH_TARBALL_SHA1
+ENV ELASTICSEARCH_TARBALL_SHA1 ${ELASTICSEARCH_TARBALL_SHA1:-d5e4b61038f2cc3ec7ae5cbecf3406c7ecc7a1c4}
+
+ENV ELASTICSEARCH_TARBALL https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz
+ENV ELASTICSEARCH_TARBALL_ASC https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz.asc
 
 RUN set -ex; \
 	wget -O elasticsearch.tar.gz "$ELASTICSEARCH_TARBALL"; \
@@ -80,9 +85,13 @@ RUN if [ "${ELASTICSEARCH_VERSION%%.*}" -gt 1 ]; then \
       elasticsearch -v; \
     fi
 
-ENV XPACK_VERSION=5.6.3 \
-    XPACK_TARBALL="https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-5.6.3.zip" \
-    XPACK_TARBALL_SHA1="fa9b2b58bf7d373202f586036d4ddf760b6eeba0"
+ARG XPACK_VERSION
+ENV XPACK_VERSION ${XPACK_VERSION:-5.6.3}
+
+ARG XPACK_TARBALL_SHA1
+ENV XPACK_TARBALL_SHA1 ${XPACK_TARBALL_SHA1:-fa9b2b58bf7d373202f586036d4ddf760b6eeba0}
+
+ENV XPACK_TARBALL https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-${XPACK_VERSION}.zip
 
 COPY config/ ./config/
 

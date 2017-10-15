@@ -7,6 +7,6 @@ branches:
 before_script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
 script:
-  - docker build -t ianblenke/rpi-elasticsearch:v5.6.3 .
+  - ./build.sh
 after_success:
-  - if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push ianblenke/rpi-elasticsearch:v5.6.3; fi
+  - ./push.sh
